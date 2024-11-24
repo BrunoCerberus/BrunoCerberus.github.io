@@ -46,8 +46,26 @@ h2 {
 }
 
 ul {
-    list-style: none;
+    list-style-type: none; /* Removes default bullets */
     padding: 0;
+}
+
+ul li {
+    margin-bottom: 15px;
+}
+
+ul ul li {
+    margin-bottom: 10px;
+    position: relative;
+    padding-left: 20px; /* Space for custom bullet */
+}
+
+ul ul li::before {
+    content: '○'; /* Custom bullet point */
+    position: absolute;
+    left: 0;
+    color: #888; /* Light gray for the bullets */
+    font-size: 1rem;
 }
 
 li {
