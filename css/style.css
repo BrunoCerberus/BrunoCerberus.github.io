@@ -50,21 +50,31 @@ ul {
     padding: 0;
 }
 
-ul li {
-    margin-bottom: 15px;
-}
-
-ul ul li {
-    margin-bottom: 10px;
+ul > li {
     position: relative;
+    margin-bottom: 20px;
     padding-left: 20px; /* Space for custom bullet */
 }
 
-ul ul li::before {
-    content: '○'; /* Custom bullet point */
+ul > li::before {
+    content: '•'; /* Top-level bullet (dot) */
     position: absolute;
     left: 0;
-    color: #888; /* Light gray for the bullets */
+    color: #fff;
+    font-size: 1.2rem; /* Slightly larger for emphasis */
+}
+
+ul ul li {
+    position: relative;
+    padding-left: 20px; /* Space for nested bullet */
+    margin-bottom: 10px;
+}
+
+ul ul li::before {
+    content: '○'; /* Nested bullet (hollow circle) */
+    position: absolute;
+    left: 0;
+    color: #888; /* Lighter color for nested bullets */
     font-size: 1rem;
 }
 
