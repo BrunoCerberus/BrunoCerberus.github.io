@@ -62,8 +62,8 @@ ul > li::before {
     content: '•'; /* Top-level bullet (dot) */
     position: absolute;
     left: 0; /* Aligns the bullet with the left side */
-    top: 50%; /* Centers the bullet vertically relative to the text */
-    transform: translateY(-50%); /* Adjusts for perfect vertical alignment */
+    top: 0.4em; /* Adjusted value for better vertical alignment */
+    transform: translateY(-50%); /* Centers the bullet relative to the text */
     color: #fff; /* White color for top-level bullets */
     font-size: 1.2rem; /* Slightly larger bullet for emphasis */
 }
