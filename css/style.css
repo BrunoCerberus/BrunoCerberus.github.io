@@ -45,45 +45,47 @@ h2 {
     padding-left: 10px;
 }
 
+/* General list styles */
 ul {
-    list-style-type: none;
+    list-style-type: none; /* Removes default bullets */
     padding: 0;
     margin: 0;
 }
 
 ul > li {
     position: relative;
-    margin-bottom: 20px;
-    padding-left: 25px;
+    margin-bottom: 20px; /* Space between top-level items */
+    padding-left: 30px; /* Space for the bullet */
 }
 
 ul > li::before {
-    content: '•';
+    content: '•'; /* Top-level bullet (dot) */
     position: absolute;
-    left: 0;
-    top: 0.3em;
-    color: #fff;
-    font-size: 1.2rem;
+    left: 0; /* Aligns the bullet with the left side */
+    top: 0; /* Ensures vertical alignment with the text */
+    color: #fff; /* White color for top-level bullets */
+    font-size: 1.2rem; /* Slightly larger bullet for emphasis */
+    line-height: 1; /* Ensures consistent vertical alignment */
 }
 
 ul ul {
-    margin-top: 10px;
-    margin-left: 15px;
+    margin-top: 10px; /* Adds spacing between nested and parent items */
+    margin-left: 15px; /* Indents nested lists under top-level items */
 }
 
 ul ul li {
     position: relative;
-    padding-left: 25px;
-    margin-bottom: 10px;
+    padding-left: 25px; /* Indent for nested bullet */
+    margin-bottom: 10px; /* Space between nested items */
 }
 
 ul ul li::before {
-    content: '○';
+    content: '○'; /* Nested bullet (hollow circle) */
     position: absolute;
-    left: 0;
-    top: 0.3em;
-    color: #888;
-    font-size: 1rem;
+    left: 0; /* Align nested bullet with the start of the nested text */
+    top: 0.3em; /* Aligns bullet vertically with text */
+    color: #888; /* Gray color for nested bullets */
+    font-size: 1rem; /* Slightly smaller for nested bullets */
 }
 
 .job-title {
