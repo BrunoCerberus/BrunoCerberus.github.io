@@ -1,6 +1,6 @@
 /* General styles */
 body {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Courier New', Courier, monospace; /* Typewriter font */
     margin: 0;
     padding: 0;
     background-color: #000;
