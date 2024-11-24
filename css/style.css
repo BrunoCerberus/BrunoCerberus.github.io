@@ -46,30 +46,44 @@ h2 {
 }
 
 ul {
-    list-style-type: none; /* Removes default bullets */
+    list-style-type: none;
     padding: 0;
+    margin: 0;
 }
 
-ul li {
-    margin-bottom: 15px;
+ul > li {
+    position: relative;
+    margin-bottom: 20px;
+    padding-left: 25px;
+}
+
+ul > li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    top: 0.3em;
+    color: #fff;
+    font-size: 1.2rem;
+}
+
+ul ul {
+    margin-top: 10px;
+    margin-left: 15px;
 }
 
 ul ul li {
-    margin-bottom: 10px;
     position: relative;
-    padding-left: 20px; /* Space for custom bullet */
+    padding-left: 25px;
+    margin-bottom: 10px;
 }
 
 ul ul li::before {
-    content: '○'; /* Custom bullet point */
+    content: '○';
     position: absolute;
     left: 0;
-    color: #888; /* Light gray for the bullets */
+    top: 0.3em;
+    color: #888;
     font-size: 1rem;
-}
-
-li {
-    margin-bottom: 10px;
 }
 
 .job-title {
