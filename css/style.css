@@ -58,16 +58,6 @@ ul > li {
     padding-left: 30px; /* Space for the bullet */
 }
 
-ul > li::before {
-    content: '•'; /* Top-level bullet (dot) */
-    position: absolute;
-    left: 0; /* Aligns the bullet with the left side */
-    top: 3%; /* Adjusted value for better vertical alignment */
-    transform: translateY(-50%); /* Centers the bullet relative to the text */
-    color: #fff; /* White color for top-level bullets */
-    font-size: 1.2rem; /* Slightly larger bullet for emphasis */
-}
-
 ul ul {
     margin-top: 10px; /* Adds spacing between nested and parent items */
     margin-left: 15px; /* Indents nested lists under top-level items */
