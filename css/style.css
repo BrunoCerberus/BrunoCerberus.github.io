@@ -135,3 +135,15 @@ a:hover {
         padding: 15px;
     }
 }
+
+.video-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+iframe {
+    max-width: 100%;
+    height: auto;
+}
