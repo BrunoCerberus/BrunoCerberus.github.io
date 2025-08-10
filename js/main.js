@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }, observerOptions);
     
     // Observe elements for animation
-    const animateElements = document.querySelectorAll('.skill-category, .timeline-item, .education-item, .stat-item, .project-item');
+    const animateElements = document.querySelectorAll('.skill-category, .timeline-item, .education-item, .stat-item, .project-item, .location-content');
     animateElements.forEach((el, index) => {
         // Add staggered animation for project items
         if (el.classList.contains('project-item')) {
@@ -299,7 +299,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add CSS for animations
     const style = document.createElement('style');
     style.textContent = `
-        .skill-category, .timeline-item, .education-item, .stat-item, .project-item {
+        .skill-category, .timeline-item, .education-item, .stat-item, .project-item, .location-content {
             opacity: 0;
             transform: translateY(30px);
             transition: all 0.6s ease;
