@@ -520,14 +520,8 @@ a:hover {
 
 .hero-name {
     display: block;
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
+    color: var(--accent-primary);
     margin-bottom: 0.5rem;
-    background-size: 200% 200%;
-    animation: gradientText 5s ease infinite;
 }
 
 @keyframes gradientText {
