@@ -285,6 +285,9 @@ a:hover {
 }
 
 .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
     font-size: 1.5rem;
     font-weight: 700;
     position: relative;
@@ -302,6 +305,14 @@ a:hover {
 .nav-logo:hover .logo-image {
     transform: scale(1.1);
     box-shadow: 0 0 15px rgba(102, 126, 234, 0.5);
+}
+
+.logo-text {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: 0.02em;
+    white-space: nowrap;
 }
 
 .nav-links {
