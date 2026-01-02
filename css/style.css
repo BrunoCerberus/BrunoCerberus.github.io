@@ -522,13 +522,12 @@ a:hover {
     display: block;
     background: var(--gradient-primary);
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
     background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
     margin-bottom: 0.5rem;
     background-size: 200% 200%;
-    animation: gradientText 5s ease 0s infinite, fadeInUp 0.8s ease 0.5s forwards;
-    opacity: 0;
-    transform: translateY(20px);
+    animation: gradientText 5s ease infinite;
 }
 
 @keyframes gradientText {
