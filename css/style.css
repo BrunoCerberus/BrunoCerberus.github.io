@@ -1697,6 +1697,7 @@ a:hover {
 .contact-form .btn {
     display: block;
     width: 100%;
+    max-width: none;
 }
 
 .form-group {
