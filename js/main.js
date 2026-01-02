@@ -314,29 +314,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // ============================================
-    // Text Typing Effect
-    // ============================================
-    const heroName = document.querySelector('.hero-name');
-    if (heroName) {
-        const text = heroName.textContent;
-        heroName.innerHTML = '';
-        heroName.style.opacity = '1';
-        heroName.style.transform = 'translateY(0)';
-
-        let charIndex = 0;
-        const typeSpeed = 100;
-
-        function typeText() {
-            if (charIndex < text.length) {
-                heroName.innerHTML += `<span class="char" style="animation-delay: ${charIndex * 0.05}s">${text[charIndex]}</span>`;
-                charIndex++;
-                setTimeout(typeText, typeSpeed);
-            }
-        }
-
-        setTimeout(typeText, 1500);
-    }
 
     // ============================================
     // Contact Form
