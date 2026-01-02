@@ -1694,6 +1694,11 @@ a:hover {
     border: 1px solid var(--glass-border);
 }
 
+.contact-form .btn {
+    display: block;
+    width: 100%;
+}
+
 .form-group {
     margin-bottom: 1.5rem;
 }
