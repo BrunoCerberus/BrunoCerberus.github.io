@@ -535,8 +535,7 @@ a:hover {
     background-clip: text;
     margin-bottom: 0.5rem;
     background-size: 200% 200%;
-    animation: gradientText 5s ease infinite, fadeInUp 0.8s ease forwards;
-    animation-delay: 0s, 0.5s;
+    animation: gradientText 5s ease 0s infinite, fadeInUp 0.8s ease 0.5s forwards;
     opacity: 0;
     transform: translateY(20px);
 }
@@ -547,6 +546,10 @@ a:hover {
 }
 
 @keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
     to {
         opacity: 1;
         transform: translateY(0);
