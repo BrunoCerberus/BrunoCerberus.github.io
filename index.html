@@ -1,723 +1,612 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Bruno Mello - Senior iOS Developer with 8+ years of experience in Swift, SwiftUI, Combine, RxSwift, and Clean Architecture">
-    <meta name="keywords" content="iOS Developer, Swift, SwiftUI, Combine, RxSwift, Clean Architecture, Mobile Development">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Bruno Mello — Senior iOS Engineer with 8+ years crafting Swift, SwiftUI, Combine and Clean Architecture, now moving into spatial computing.">
+    <meta name="keywords" content="iOS Developer, Swift, SwiftUI, Combine, RxSwift, Clean Architecture, visionOS, Spatial Computing, Mobile Development">
     <meta name="author" content="Bruno Mello">
-    <meta name="theme-color" content="#667eea">
-    <title>Bruno Mello - Senior iOS Developer</title>
-    <link rel="stylesheet" href="./css/style.css">
+    <meta name="theme-color" content="#0E0F13">
+    <meta name="color-scheme" content="dark light">
+    <meta property="og:title" content="Bruno Mello — Senior iOS Engineer">
+    <meta property="og:description" content="8+ years crafting exceptional iOS experiences. Swift · SwiftUI · Spatial Computing.">
+    <meta property="og:type" content="website">
+    <title>Bruno Mello — Senior iOS Engineer</title>
+
+    <!-- Set theme + js flag before paint (avoids FOUC and JS-off blank page) -->
+    <script>
+        (function () {
+            var r = document.documentElement;
+            r.classList.add('js');
+            try {
+                r.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
+            } catch (e) {}
+        })();
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Hanken+Grotesk:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
-    <!-- Page Loader -->
-    <div class="page-loader">
-        <div class="loader-content">
-            <div class="loader-logo"><img src="./images/avatar.png" alt="Bruno Mello"></div>
-            <div class="loader-bar">
-                <div class="loader-progress"></div>
-            </div>
+    <!-- Skip link -->
+    <a href="#main" class="skip-link">Skip to content</a>
+
+    <!-- ============ Spatial Environment (fixed, behind everything) ============ -->
+    <div class="env" aria-hidden="true">
+        <div class="env-void"></div>
+        <div class="env-aurora">
+            <span class="orb orb-cyan"></span>
+            <span class="orb orb-violet"></span>
+            <span class="orb orb-ember"></span>
         </div>
+        <div class="env-stars" id="stars"></div>
+        <div class="env-grain"></div>
+        <div class="env-vignette"></div>
+        <div class="cursor-light" id="cursorLight"></div>
     </div>
 
-    <!-- Custom Cursor -->
-    <div class="cursor"></div>
-    <div class="cursor-dot"></div>
+    <!-- Custom cursor halo -->
+    <div class="cursor-halo" id="cursorHalo" aria-hidden="true"></div>
 
-    <!-- Animated Background -->
-    <div class="gradient-bg"></div>
-    <div class="noise-overlay"></div>
+    <!-- ============ Lens-Calibration Loader ============ -->
+    <div class="loader" id="loader" aria-hidden="true">
+        <div class="loader-bloom"></div>
+    </div>
 
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <img src="./images/avatar.png" alt="Bruno Mello" class="logo-image">
-                <span class="logo-text">Bruno Mello</span>
-            </div>
-            <div class="nav-links">
+    <!-- Scroll progress hairline -->
+    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+    <!-- ============ Navigation ============ -->
+    <nav class="nav" id="nav" aria-label="Primary">
+        <div class="nav-inner glass glass--thin">
+            <a href="#hero" class="nav-brand" aria-label="Bruno Mello — home">
+                <span class="nav-brand-avatar"><img src="./images/avatar.png" alt="" width="36" height="36"></span>
+                <span class="nav-brand-name">Bruno Mello</span>
+            </a>
+            <div class="nav-links" id="navLinks">
+                <span class="nav-pill" id="navPill" aria-hidden="true"></span>
                 <a href="#about" class="nav-link">About</a>
                 <a href="#experience" class="nav-link">Experience</a>
                 <a href="#skills" class="nav-link">Skills</a>
-                <a href="#projects" class="nav-link">Projects</a>
+                <a href="#projects" class="nav-link">Work</a>
                 <a href="#location" class="nav-link">Location</a>
                 <a href="#contact" class="nav-link">Contact</a>
             </div>
-            <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark/light mode">
-                <i class="fas fa-moon"></i>
-            </button>
-            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle mobile menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+            <div class="nav-actions">
+                <button class="bead theme-toggle" id="themeToggle" aria-label="Switch to light theme" aria-pressed="false">
+                    <i class="fas fa-moon" aria-hidden="true"></i>
+                </button>
+                <button class="bead menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <main id="main">
+
+    <!-- ============ Hero ============ -->
     <section class="hero" id="hero">
-        <!-- Floating Particles -->
-        <div class="particles">
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-        </div>
-
-        <!-- Glow Orbs -->
-        <div class="glow-orb glow-orb-1"></div>
-        <div class="glow-orb glow-orb-2"></div>
-        <div class="glow-orb glow-orb-3"></div>
-
-        <div class="hero-container">
-            <div class="hero-content">
-                <div class="hero-text">
-                    <h1 class="hero-title">
-                        <span class="hero-greeting">Hello, I'm</span>
-                        <span class="hero-name">Bruno Mello</span>
-                        <span class="hero-role">Senior iOS Developer</span>
-                    </h1>
-                    <p class="hero-description">
-                        Crafting exceptional mobile experiences with 8+ years of expertise in Swift, SwiftUI, and Clean Architecture.
-                        Building scalable, performant apps that users love.
-                    </p>
-                    <div class="hero-actions">
-                        <a href="#contact" class="btn btn-primary">Get In Touch</a>
-                        <a href="#experience" class="btn btn-secondary">View Experience</a>
-                    </div>
+        <div class="hero-grid container">
+            <div class="hero-copy">
+                <p class="eyebrow reveal" data-d="0">
+                    <span class="eyebrow-dot"></span> Senior iOS Engineer · São Paulo
+                </p>
+                <h1 class="hero-name">
+                    <span class="line-mask"><span class="line" data-line="0">Hello, I'm</span></span>
+                    <span class="line-mask"><span class="line hero-name-main" data-line="1">Bruno Mello</span></span>
+                </h1>
+                <p class="hero-role"><span id="roleText"></span><span class="caret" aria-hidden="true"></span></p>
+                <p class="hero-desc reveal" data-d="1">
+                    Crafting exceptional mobile experiences with <strong>8+ years</strong> in
+                    <strong>Swift</strong>, <strong>SwiftUI</strong>, and Clean Architecture —
+                    building scalable, performant apps for <strong>PayPal</strong>, <strong>WHOOP</strong>
+                    and <strong>Venmo</strong>, now reaching into <strong>Spatial Computing</strong>.
+                </p>
+                <div class="hero-cta reveal" data-d="2">
+                    <a href="#contact" class="btn btn-accent" data-magnetic>
+                        <span>Get in touch</span>
+                        <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                    </a>
+                    <a href="#experience" class="btn btn-ghost" data-magnetic>
+                        <span>View experience</span>
+                    </a>
                 </div>
-                <div class="hero-visual">
-                    <div class="hero-illustration">
-                        <div class="code-block">
-                            <div class="code-header">
-                                <span class="code-dot"></span>
-                                <span class="code-dot"></span>
-                                <span class="code-dot"></span>
-                            </div>
-                            <div class="code-content">
-                                <span class="code-keyword">struct</span> <span class="code-class">PortfolioView</span>: <span class="code-type">View</span> {
-                                <br>&nbsp;&nbsp;<span class="code-keyword">var</span> <span class="code-property">body</span>: <span class="code-type">some</span> <span class="code-type">View</span> {
-                                <br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-type">VStack</span> {
-                                <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-text">Text</span>(<span class="code-string">"Hello, World!"</span>)
-                                <br>&nbsp;&nbsp;&nbsp;&nbsp;}.<span class="code-function">animation</span>(.<span class="code-property">spring</span>())
-                                <br>&nbsp;&nbsp;}
-                                <br>}
-                            </div>
-                        </div>
+            </div>
+
+            <div class="hero-visual reveal-scale" data-d="1">
+                <div class="code-panel glass glass--thick" data-tilt data-tilt-max="6">
+                    <div class="code-bar">
+                        <span class="code-bead"></span>
+                        <span class="code-bead"></span>
+                        <span class="code-bead"></span>
+                        <span class="code-file">PortfolioView.swift</span>
                     </div>
+                    <pre class="code-body tz" data-tz="8"><code><span class="ln"><span class="c-key">import</span> <span class="c-type">SwiftUI</span></span>
+<span class="ln"></span>
+<span class="ln"><span class="c-key">struct</span> <span class="c-cls">PortfolioView</span>: <span class="c-type">View</span> {</span>
+<span class="ln">  <span class="c-key">var</span> <span class="c-prop">body</span>: <span class="c-key">some</span> <span class="c-type">View</span> {</span>
+<span class="ln">    <span class="c-type">VStack</span>(spacing: <span class="c-num">16</span>) {</span>
+<span class="ln">      <span class="c-type">Text</span>(<span class="c-str">"Hello, World!"</span>)</span>
+<span class="ln">        .<span class="c-fn">font</span>(.<span class="c-prop">largeTitle</span>)</span>
+<span class="ln">      <span class="c-type">Spacer</span>()</span>
+<span class="ln">    }</span>
+<span class="ln">    .<span class="c-fn">animation</span>(.<span class="c-prop">spring</span>())</span>
+<span class="ln">  }</span>
+<span class="ln">}</span></code></pre>
                 </div>
             </div>
         </div>
-        <div class="hero-scroll-indicator">
-            <div class="scroll-arrow"></div>
-        </div>
+
+        <a href="#about" class="scroll-cue" aria-label="Scroll to content">
+            <span class="scroll-cue-line"></span>
+            <span class="scroll-cue-text">Scroll</span>
+        </a>
     </section>
 
-    <!-- About Section -->
+    <!-- ============ About ============ -->
     <section class="section" id="about">
         <div class="container">
-            <div class="section-header reveal">
-                <h2 class="section-title">About Me</h2>
-                <p class="section-subtitle">Passionate about creating exceptional mobile experiences</p>
-            </div>
-            <div class="about-content">
-                <div class="about-text reveal-left">
-                    <p>
-                        I'm a Senior iOS Developer with over 8 years of experience building apps that are fast, reliable, and user-friendly.
-                        I started my journey with <strong>Objective-C</strong> but quickly embraced <strong>Swift</strong> and <strong>SwiftUI</strong>,
-                        and now I'm diving into exciting new technologies like <strong>Spatial Programming</strong>.
+            <header class="section-head reveal">
+                <p class="eyebrow"><span class="eyebrow-dot"></span> 01 — About</p>
+                <h2 class="section-title">The human behind the&nbsp;craft</h2>
+            </header>
+            <div class="about-grid">
+                <div class="about-bio">
+                    <p class="reveal" data-d="0">
+                        I'm a Senior iOS Engineer with over <strong>8 years</strong> building apps that are
+                        fast, reliable and a pleasure to use. I started in <strong>Objective-C</strong>,
+                        quickly embraced <strong>Swift</strong> and <strong>SwiftUI</strong>, and I'm now
+                        diving into <strong>Spatial Programming</strong> on <strong>Vision Pro</strong>.
                     </p>
-                    <p>
-                        Over the years, I've worked on everything from maintaining legacy code to designing scalable architectures like
-                        <strong>MVVM</strong>, <strong>VIPER</strong>, and <strong>TCA</strong>. I love using frameworks like <strong>Combine</strong>
-                        and <strong>RxSwift</strong> to make apps not only functional but also scalable, testable, modular and decoupled.
+                    <p class="reveal" data-d="1">
+                        I've designed scalable architectures — <strong>MVVM</strong>, <strong>VIPER</strong>,
+                        <strong>TCA</strong> — and lean on <strong>Combine</strong> and <strong>RxSwift</strong>
+                        to keep apps testable, modular and decoupled.
                     </p>
-                    <p>
-                        I'm passionate about solving tough technical challenges and making products that people love to use.
-                        Whether it's integrating APIs, optimizing app performance, or crafting clean, maintainable code, I enjoy
-                        every step of the development process.
+                    <p class="reveal" data-d="2">
+                        Whether integrating APIs, squeezing out performance, or shaping clean, maintainable
+                        code, I enjoy every step of building products people genuinely love.
                     </p>
                 </div>
-                <div class="about-stats reveal-right">
-                    <div class="stat-item">
-                        <div class="stat-number">8+</div>
-                        <div class="stat-label">Years Experience</div>
+                <div class="about-stats">
+                    <div class="stat glass glass--card reveal-scale" data-d="0" data-tilt data-tilt-max="5" data-focus-group="stats">
+                        <div class="stat-num" data-count="8" data-suffix="+">0+</div>
+                        <div class="stat-label">Years crafting iOS</div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-number">10+</div>
-                        <div class="stat-label">Apps Built</div>
+                    <div class="stat glass glass--card reveal-scale" data-d="1" data-tilt data-tilt-max="5" data-focus-group="stats">
+                        <div class="stat-num" data-count="10" data-suffix="+">0+</div>
+                        <div class="stat-label">Roles &amp; shipped apps</div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-number">100%</div>
-                        <div class="stat-label">Swift Native</div>
+                    <div class="stat stat--ember glass glass--card reveal-scale" data-d="2" data-tilt data-tilt-max="5" data-focus-group="stats">
+                        <div class="stat-num" data-count="100" data-suffix="%">0%</div>
+                        <div class="stat-label">Swift native</div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Experience Section -->
+    <!-- ============ Experience ============ -->
     <section class="section" id="experience">
-        <div class="container">
-            <div class="section-header reveal">
-                <h2 class="section-title">Professional Experience</h2>
-                <p class="section-subtitle">My journey in iOS development</p>
-            </div>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <div class="timeline-header">
-                            <h3 class="timeline-title">iOS Software Engineer</h3>
-                            <span class="timeline-company">PayPal</span>
-                            <span class="timeline-date">Mar 2024 - Present</span>
+        <div class="container container--wide">
+            <header class="section-head reveal">
+                <p class="eyebrow"><span class="eyebrow-dot"></span> 02 — Experience</p>
+                <h2 class="section-title">A flight path through iOS</h2>
+                <p class="section-sub">Ten roles, one obsession: shipping apps that feel inevitable.</p>
+            </header>
+
+            <div class="timeline" id="timeline">
+                <div class="timeline-spine" aria-hidden="true">
+                    <span class="timeline-fill" id="timelineFill"></span>
+                </div>
+
+                <article class="tl-item is-now reveal" data-d="0" data-focus-group="tl">
+                    <span class="tl-bead" aria-hidden="true"></span>
+                    <div class="tl-card glass glass--card" data-tilt data-tilt-max="4">
+                        <div class="tl-head">
+                            <h3 class="tl-title">iOS Software Engineer</h3>
+                            <span class="tl-company">PayPal</span>
+                            <span class="tl-date mono">Mar 2024 — <em>Present</em></span>
                         </div>
-                        <ul class="timeline-details">
-                            <li>Developed new features using <strong>Swift</strong> and <strong>UIKit</strong></li>
+                        <ul class="tl-list">
+                            <li>Developed new features in <strong>Swift</strong> and <strong>UIKit</strong></li>
                             <li>Maintained and improved legacy <strong>Objective-C</strong> code</li>
-                            <li>Implemented <strong>RxSwift</strong> for reactive programming to streamline data flows</li>
-                            <li>Wrote unit and automation tests to ensure app reliability and performance</li>
-                            <li>Utilized tools like <strong>Crashlytics</strong> and <strong>Firebase Remote</strong> for feature management and bug tracking</li>
+                            <li>Implemented <strong>RxSwift</strong> for reactive data flows</li>
+                            <li>Wrote unit and automation tests for reliability and performance</li>
+                            <li>Used <strong>Crashlytics</strong> &amp; <strong>Firebase Remote</strong> for feature management</li>
                         </ul>
                     </div>
-                </div>
+                </article>
 
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <div class="timeline-header">
-                            <h3 class="timeline-title">iOS Software Engineer</h3>
-                            <span class="timeline-company">WHOOP</span>
-                            <span class="timeline-date">Feb 2023 - Feb 2024</span>
+                <article class="tl-item reveal" data-d="0" data-focus-group="tl">
+                    <span class="tl-bead" aria-hidden="true"></span>
+                    <div class="tl-card glass glass--card" data-tilt data-tilt-max="4">
+                        <div class="tl-head">
+                            <h3 class="tl-title">iOS Software Engineer</h3>
+                            <span class="tl-company">WHOOP</span>
+                            <span class="tl-date mono">Feb 2023 — Feb 2024</span>
                         </div>
-                        <ul class="timeline-details">
-                            <li>Built features with <strong>SwiftUI</strong> and <strong>Combine</strong> for improved user experience</li>
-                            <li>Maintained older code using <strong>Objective-C</strong></li>
+                        <ul class="tl-list">
+                            <li>Built features with <strong>SwiftUI</strong> and <strong>Combine</strong></li>
+                            <li>Maintained older code in <strong>Objective-C</strong></li>
                             <li>Integrated RESTful APIs for data synchronization</li>
-                            <li>Utilized Google Analytics and Crashlytics to monitor app usage and resolve bugs</li>
+                            <li>Used Google Analytics &amp; Crashlytics to monitor usage and resolve bugs</li>
                         </ul>
                     </div>
-                </div>
+                </article>
 
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <div class="timeline-header">
-                            <h3 class="timeline-title">iOS Software Engineer</h3>
-                            <span class="timeline-company">Klever</span>
-                            <span class="timeline-date">Apr 2021 - Jun 2023</span>
+                <article class="tl-item reveal" data-d="0" data-focus-group="tl">
+                    <span class="tl-bead" aria-hidden="true"></span>
+                    <div class="tl-card glass glass--card" data-tilt data-tilt-max="4">
+                        <div class="tl-head">
+                            <h3 class="tl-title">iOS Software Engineer</h3>
+                            <span class="tl-company">Klever</span>
+                            <span class="tl-date mono">Apr 2021 — Jun 2023</span>
                         </div>
-                        <ul class="timeline-details">
-                            <li>Developed features using <strong>SwiftUI 3.0</strong>, <strong>Combine</strong>, and <strong>TCA</strong> for scalable code</li>
-                            <li>Implemented <strong>gRPC services</strong> via Protocol Buffers for seamless communication</li>
+                        <ul class="tl-list">
+                            <li>Developed with <strong>SwiftUI 3.0</strong>, <strong>Combine</strong> and <strong>TCA</strong></li>
+                            <li>Implemented <strong>gRPC</strong> services via Protocol Buffers</li>
                             <li>Gained hands-on experience with blockchain technologies</li>
-                            <li>Improved code readability with architectural patterns such as VIPER and MVVM</li>
+                            <li>Improved readability with VIPER and MVVM patterns</li>
                         </ul>
                     </div>
-                </div>
+                </article>
 
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <div class="timeline-header">
-                            <h3 class="timeline-title">iOS Software Engineer</h3>
-                            <span class="timeline-company">Venmo</span>
-                            <span class="timeline-date">May 2022 - Feb 2023</span>
+                <article class="tl-item reveal" data-d="0" data-focus-group="tl">
+                    <span class="tl-bead" aria-hidden="true"></span>
+                    <div class="tl-card glass glass--card" data-tilt data-tilt-max="4">
+                        <div class="tl-head">
+                            <h3 class="tl-title">iOS Software Engineer</h3>
+                            <span class="tl-company">Venmo</span>
+                            <span class="tl-date mono">May 2022 — Feb 2023</span>
                         </div>
-                        <ul class="timeline-details">
-                            <li>Worked on app modularization and implemented <strong>Deep Links</strong> and <strong>Dynamic Links</strong></li>
-                            <li>Developed features using <strong>RxSwift</strong> and <strong>RxCocoa</strong></li>
-                            <li>Led CI/CD processes using Buildkite for efficient deployments</li>
-                            <li>Ensured high accessibility standards for inclusive app usage</li>
+                        <ul class="tl-list">
+                            <li>Worked on modularization, <strong>Deep Links</strong> &amp; <strong>Dynamic Links</strong></li>
+                            <li>Developed features with <strong>RxSwift</strong> and <strong>RxCocoa</strong></li>
+                            <li>Led CI/CD with Buildkite for efficient deployments</li>
+                            <li>Held high accessibility standards for inclusive usage</li>
                         </ul>
                     </div>
-                </div>
+                </article>
 
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <div class="timeline-header">
-                            <h3 class="timeline-title">iOS Software Engineer</h3>
-                            <span class="timeline-company">SKY Brasil</span>
-                            <span class="timeline-date">Aug 2020 - Aug 2021</span>
+                <article class="tl-item reveal" data-d="0" data-focus-group="tl">
+                    <span class="tl-bead" aria-hidden="true"></span>
+                    <div class="tl-card glass glass--card" data-tilt data-tilt-max="4">
+                        <div class="tl-head">
+                            <h3 class="tl-title">iOS Software Engineer</h3>
+                            <span class="tl-company">SKY Brasil</span>
+                            <span class="tl-date mono">Aug 2020 — Aug 2021</span>
                         </div>
-                        <ul class="timeline-details">
-                            <li>Optimized existing algorithms for better app performance</li>
-                            <li>Designed new components following company's Design System standards</li>
-                            <li>Performed extensive testing to ensure app reliability and quality</li>
+                        <ul class="tl-list">
+                            <li>Optimized existing algorithms for better performance</li>
+                            <li>Designed components following the company Design System</li>
+                            <li>Performed extensive testing for reliability and quality</li>
                         </ul>
                     </div>
-                </div>
+                </article>
 
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <div class="timeline-header">
-                            <h3 class="timeline-title">iOS Software Engineer</h3>
-                            <span class="timeline-company">ModalMais Home Broker</span>
-                            <span class="timeline-date">Mar 2020 - Aug 2020</span>
+                <article class="tl-item reveal" data-d="0" data-focus-group="tl">
+                    <span class="tl-bead" aria-hidden="true"></span>
+                    <div class="tl-card glass glass--card" data-tilt data-tilt-max="4">
+                        <div class="tl-head">
+                            <h3 class="tl-title">iOS Software Engineer</h3>
+                            <span class="tl-company">ModalMais Home Broker</span>
+                            <span class="tl-date mono">Mar 2020 — Aug 2020</span>
                         </div>
-                        <ul class="timeline-details">
-                            <li>Implemented innovative features to enhance user experience</li>
-                            <li>Optimized workflows with <strong>Coordinators</strong> for better modularity</li>
-                            <li>Developed reactive functionalities using <strong>RxSwift</strong></li>
+                        <ul class="tl-list">
+                            <li>Implemented innovative features to enhance UX</li>
+                            <li>Optimized workflows with <strong>Coordinators</strong></li>
+                            <li>Developed reactive functionality with <strong>RxSwift</strong></li>
                         </ul>
                     </div>
-                </div>
+                </article>
 
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <div class="timeline-header">
-                            <h3 class="timeline-title">iOS Software Engineer</h3>
-                            <span class="timeline-company">PagSeguro PagBank</span>
-                            <span class="timeline-date">Jul 2019 - Mar 2020</span>
+                <article class="tl-item reveal" data-d="0" data-focus-group="tl">
+                    <span class="tl-bead" aria-hidden="true"></span>
+                    <div class="tl-card glass glass--card" data-tilt data-tilt-max="4">
+                        <div class="tl-head">
+                            <h3 class="tl-title">iOS Software Engineer</h3>
+                            <span class="tl-company">PagSeguro PagBank</span>
+                            <span class="tl-date mono">Jul 2019 — Mar 2020</span>
                         </div>
-                        <ul class="timeline-details">
+                        <ul class="tl-list">
                             <li>Developed new features while maintaining legacy code</li>
-                            <li>Implemented accessibility support for an inclusive user experience</li>
-                            <li>Optimized performance through in-depth error analysis using Firebase Analytics</li>
+                            <li>Implemented accessibility support for inclusive UX</li>
+                            <li>Optimized performance via Firebase Analytics error analysis</li>
                         </ul>
                     </div>
-                </div>
+                </article>
 
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <div class="timeline-header">
-                            <h3 class="timeline-title">iOS Developer</h3>
-                            <span class="timeline-company">Megaleios Desenvolvimento Mobile</span>
-                            <span class="timeline-date">Jan 2019 - Jul 2019</span>
+                <article class="tl-item reveal" data-d="0" data-focus-group="tl">
+                    <span class="tl-bead" aria-hidden="true"></span>
+                    <div class="tl-card glass glass--card" data-tilt data-tilt-max="4">
+                        <div class="tl-head">
+                            <h3 class="tl-title">iOS Developer</h3>
+                            <span class="tl-company">Megaleios Mobile</span>
+                            <span class="tl-date mono">Jan 2019 — Jul 2019</span>
                         </div>
-                        <ul class="timeline-details">
-                            <li>Maintained and developed features in Objective-C and Swift, improving app stability</li>
-                            <li>Integrated Firebase and Cloud Firestore for real-time updates</li>
-                            <li>Implemented geolocation features using Google Maps, Mapbox, and MapKit</li>
+                        <ul class="tl-list">
+                            <li>Built features in Objective-C and Swift, improving stability</li>
+                            <li>Integrated Firebase &amp; Cloud Firestore for real-time updates</li>
+                            <li>Implemented geolocation with Google Maps, Mapbox and MapKit</li>
                         </ul>
                     </div>
-                </div>
+                </article>
 
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <div class="timeline-header">
-                            <h3 class="timeline-title">iOS Developer</h3>
-                            <span class="timeline-company">Mobile Saude</span>
-                            <span class="timeline-date">Jan 2018 - Jan 2019</span>
+                <article class="tl-item reveal" data-d="0" data-focus-group="tl">
+                    <span class="tl-bead" aria-hidden="true"></span>
+                    <div class="tl-card glass glass--card" data-tilt data-tilt-max="4">
+                        <div class="tl-head">
+                            <h3 class="tl-title">iOS Developer</h3>
+                            <span class="tl-company">Mobile Saúde</span>
+                            <span class="tl-date mono">Jan 2018 — Jan 2019</span>
                         </div>
-                        <ul class="timeline-details">
-                            <li>Maintained Objective-C legacy code and added new features using Swift</li>
-                            <li>Used TestFlight for app testing and debugging</li>
+                        <ul class="tl-list">
+                            <li>Maintained Objective-C legacy and added Swift features</li>
+                            <li>Used TestFlight for testing and debugging</li>
                             <li>Connected the app to Firebase for real-time updates</li>
                         </ul>
                     </div>
-                </div>
+                </article>
 
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <div class="timeline-header">
-                            <h3 class="timeline-title">iOS Jr Developer / Trainee</h3>
-                            <span class="timeline-company">Pag!</span>
-                            <span class="timeline-date">Jan 2017 - Jan 2018</span>
+                <article class="tl-item reveal" data-d="0" data-focus-group="tl">
+                    <span class="tl-bead" aria-hidden="true"></span>
+                    <div class="tl-card glass glass--card" data-tilt data-tilt-max="4">
+                        <div class="tl-head">
+                            <h3 class="tl-title">iOS Jr Developer / Trainee</h3>
+                            <span class="tl-company">Pag!</span>
+                            <span class="tl-date mono">Jan 2017 — Jan 2018</span>
                         </div>
-                        <ul class="timeline-details">
-                            <li>Developed features using Swift and improved app performance</li>
-                            <li>Integrated RESTful APIs and Firebase for data synchronization</li>
-                            <li>Conducted app testing and debugging using TestFlight</li>
+                        <ul class="tl-list">
+                            <li>Developed features in Swift and improved performance</li>
+                            <li>Integrated RESTful APIs and Firebase for sync</li>
+                            <li>Conducted testing and debugging via TestFlight</li>
                         </ul>
                     </div>
-                </div>
+                </article>
             </div>
         </div>
     </section>
 
-    <!-- Skills Section -->
-    <section class="section section-alt" id="skills">
+    <!-- ============ Skills ============ -->
+    <section class="section" id="skills">
         <div class="container">
-            <div class="section-header reveal">
-                <h2 class="section-title">Technical Skills</h2>
-                <p class="section-subtitle">Technologies and frameworks I work with</p>
-            </div>
+            <header class="section-head reveal">
+                <p class="eyebrow"><span class="eyebrow-dot"></span> 03 — Skills</p>
+                <h2 class="section-title">An engineer's toolkit</h2>
+                <p class="section-sub">Languages, frameworks and patterns I reach for.</p>
+            </header>
+
             <div class="skills-grid">
-                <div class="skill-category">
-                    <h3 class="skill-category-title">
-                        <i class="fas fa-code"></i>
-                        Programming Languages
-                    </h3>
-                    <div class="skill-items">
-                        <div class="skill-item">
-                            <i class="fab fa-swift"></i>
-                            <span>Swift</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-cube"></i>
-                            <span>Objective-C</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fab fa-java"></i>
-                            <span>Java</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-microchip"></i>
-                            <span>C/C++</span>
-                        </div>
+                <div class="skill-cat glass glass--card reveal" data-d="0" data-tilt data-tilt-max="5">
+                    <h3 class="skill-cat-title"><span class="skill-cat-icon tz" data-tz="40"><i class="fas fa-code" aria-hidden="true"></i></span> Languages</h3>
+                    <div class="chips">
+                        <span class="chip glass glass--thin"><i class="fab fa-swift" aria-hidden="true"></i> Swift</span>
+                        <span class="chip glass glass--thin"><i class="fas fa-cube" aria-hidden="true"></i> Objective-C</span>
+                        <span class="chip glass glass--thin"><i class="fab fa-java" aria-hidden="true"></i> Java</span>
+                        <span class="chip glass glass--thin"><i class="fas fa-microchip" aria-hidden="true"></i> C/C++</span>
                     </div>
                 </div>
 
-                <div class="skill-category">
-                    <h3 class="skill-category-title">
-                        <i class="fas fa-mobile-alt"></i>
-                        iOS Frameworks
-                    </h3>
-                    <div class="skill-items">
-                        <div class="skill-item">
-                            <i class="fas fa-paint-brush"></i>
-                            <span>SwiftUI</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-window-maximize"></i>
-                            <span>UIKit</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-link"></i>
-                            <span>Combine</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-bolt"></i>
-                            <span>RxSwift</span>
-                        </div>
+                <div class="skill-cat glass glass--card reveal" data-d="1" data-tilt data-tilt-max="5">
+                    <h3 class="skill-cat-title"><span class="skill-cat-icon tz" data-tz="40"><i class="fas fa-mobile-screen" aria-hidden="true"></i></span> iOS Frameworks</h3>
+                    <div class="chips">
+                        <span class="chip glass glass--thin"><i class="fas fa-paint-brush" aria-hidden="true"></i> SwiftUI</span>
+                        <span class="chip glass glass--thin"><i class="fas fa-window-maximize" aria-hidden="true"></i> UIKit</span>
+                        <span class="chip glass glass--thin"><i class="fas fa-link" aria-hidden="true"></i> Combine</span>
+                        <span class="chip glass glass--thin"><i class="fas fa-bolt" aria-hidden="true"></i> RxSwift</span>
                     </div>
                 </div>
 
-                <div class="skill-category">
-                    <h3 class="skill-category-title">
-                        <i class="fas fa-sitemap"></i>
-                        Architecture Patterns
-                    </h3>
-                    <div class="skill-items">
-                        <div class="skill-item">
-                            <i class="fas fa-layer-group"></i>
-                            <span>MVVM</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-project-diagram"></i>
-                            <span>VIPER</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-cubes"></i>
-                            <span>TCA</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-broom"></i>
-                            <span>Clean Architecture</span>
-                        </div>
+                <div class="skill-cat glass glass--card reveal" data-d="2" data-tilt data-tilt-max="5">
+                    <h3 class="skill-cat-title"><span class="skill-cat-icon tz" data-tz="40"><i class="fas fa-sitemap" aria-hidden="true"></i></span> Architecture</h3>
+                    <div class="chips">
+                        <span class="chip glass glass--thin"><i class="fas fa-layer-group" aria-hidden="true"></i> MVVM</span>
+                        <span class="chip glass glass--thin"><i class="fas fa-project-diagram" aria-hidden="true"></i> VIPER</span>
+                        <span class="chip glass glass--thin"><i class="fas fa-cubes" aria-hidden="true"></i> TCA</span>
+                        <span class="chip glass glass--thin"><i class="fas fa-broom" aria-hidden="true"></i> Clean Arch</span>
                     </div>
                 </div>
 
-                <div class="skill-category">
-                    <h3 class="skill-category-title">
-                        <i class="fas fa-database"></i>
-                        Data & Backend
-                    </h3>
-                    <div class="skill-items">
-                        <div class="skill-item">
-                            <i class="fas fa-cloud"></i>
-                            <span>REST APIs</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-exchange-alt"></i>
-                            <span>gRPC</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-fire"></i>
-                            <span>Firebase</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-database"></i>
-                            <span>CoreData</span>
-                        </div>
+                <div class="skill-cat glass glass--card reveal" data-d="0" data-tilt data-tilt-max="5">
+                    <h3 class="skill-cat-title"><span class="skill-cat-icon tz" data-tz="40"><i class="fas fa-database" aria-hidden="true"></i></span> Data &amp; Backend</h3>
+                    <div class="chips">
+                        <span class="chip glass glass--thin"><i class="fas fa-cloud" aria-hidden="true"></i> REST APIs</span>
+                        <span class="chip glass glass--thin"><i class="fas fa-exchange-alt" aria-hidden="true"></i> gRPC</span>
+                        <span class="chip glass glass--thin"><i class="fas fa-fire" aria-hidden="true"></i> Firebase</span>
+                        <span class="chip glass glass--thin"><i class="fas fa-database" aria-hidden="true"></i> CoreData</span>
                     </div>
                 </div>
 
-                <div class="skill-category">
-                    <h3 class="skill-category-title">
-                        <i class="fas fa-tools"></i>
-                        Development Tools
-                    </h3>
-                    <div class="skill-items">
-                        <div class="skill-item">
-                            <i class="fab fa-github"></i>
-                            <span>GitHub</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            <span>Xcode Cloud</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-rocket"></i>
-                            <span>Fastlane</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-vr-cardboard"></i>
-                            <span>Vision Pro SDK</span>
-                        </div>
+                <div class="skill-cat glass glass--card reveal" data-d="1" data-tilt data-tilt-max="5">
+                    <h3 class="skill-cat-title"><span class="skill-cat-icon tz" data-tz="40"><i class="fas fa-toolbox" aria-hidden="true"></i></span> Tooling</h3>
+                    <div class="chips">
+                        <span class="chip glass glass--thin"><i class="fab fa-github" aria-hidden="true"></i> GitHub</span>
+                        <span class="chip glass glass--thin"><i class="fas fa-cloud-upload-alt" aria-hidden="true"></i> Xcode Cloud</span>
+                        <span class="chip glass glass--thin"><i class="fas fa-rocket" aria-hidden="true"></i> Fastlane</span>
+                        <span class="chip chip--ember glass glass--thin"><i class="fas fa-vr-cardboard" aria-hidden="true"></i> Vision Pro SDK</span>
                     </div>
                 </div>
 
-                <div class="skill-category">
-                    <h3 class="skill-category-title">
-                        <i class="fas fa-chart-line"></i>
-                        Testing & Analytics
-                    </h3>
-                    <div class="skill-items">
-                        <div class="skill-item">
-                            <i class="fas fa-vial"></i>
-                            <span>Unit Testing</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-bug"></i>
-                            <span>Crashlytics</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-chart-bar"></i>
-                            <span>Analytics</span>
-                        </div>
-                        <div class="skill-item">
-                            <i class="fas fa-eye"></i>
-                            <span>UI Testing</span>
-                        </div>
+                <div class="skill-cat glass glass--card reveal" data-d="2" data-tilt data-tilt-max="5">
+                    <h3 class="skill-cat-title"><span class="skill-cat-icon tz" data-tz="40"><i class="fas fa-chart-line" aria-hidden="true"></i></span> Testing &amp; Analytics</h3>
+                    <div class="chips">
+                        <span class="chip glass glass--thin"><i class="fas fa-vial" aria-hidden="true"></i> Unit Testing</span>
+                        <span class="chip glass glass--thin"><i class="fas fa-bug" aria-hidden="true"></i> Crashlytics</span>
+                        <span class="chip glass glass--thin"><i class="fas fa-chart-bar" aria-hidden="true"></i> Analytics</span>
+                        <span class="chip glass glass--thin"><i class="fas fa-eye" aria-hidden="true"></i> UI Testing</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Projects Section -->
-    <section class="section section-alt" id="projects">
+    <!-- ============ Projects ============ -->
+    <section class="section" id="projects">
         <div class="container">
-            <div class="section-header reveal">
-                <h2 class="section-title">Featured Projects</h2>
-                <p class="section-subtitle">Showcasing my professional work with leading companies</p>
-            </div>
-            <div class="projects-grid">
-                <div class="project-item">
-                    <div class="project-image">
-                        <div class="project-overlay">
-                            <div class="project-tech">
-                                <span class="tech-tag">Swift</span>
-                                <span class="tech-tag">UIKit</span>
-                                <span class="tech-tag">MVVM</span>
-                            </div>
-                        </div>
-                        <div class="project-logo">
-                            <img src="https://venmo.com/favicon.ico" alt="Venmo Logo" class="company-logo">
-                        </div>
-                    </div>
-                    <div class="project-content">
-                        <h3>Venmo</h3>
-                        <p>Contributed to the iOS app development for one of the world's leading peer-to-peer payment platforms, helping millions of users send and receive money seamlessly.</p>
-                        <div class="project-links">
-                            <a href="https://venmo.com" target="_blank" rel="noopener noreferrer" class="project-link"><i class="fas fa-external-link-alt"></i> Visit App</a>
-                            <a href="https://venmo.com" target="_blank" rel="noopener noreferrer" class="project-link"><i class="fas fa-globe"></i> Website</a>
-                        </div>
-                    </div>
-                </div>
+            <header class="section-head reveal">
+                <p class="eyebrow"><span class="eyebrow-dot"></span> 04 — Selected Work</p>
+                <h2 class="section-title">Apps in millions of pockets</h2>
+            </header>
 
-                <div class="project-item">
-                    <div class="project-image">
-                        <div class="project-overlay">
-                            <div class="project-tech">
-                                <span class="tech-tag">SwiftUI</span>
-                                <span class="tech-tag">Combine</span>
-                                <span class="tech-tag">HealthKit</span>
-                            </div>
-                        </div>
-                        <div class="project-logo">
-                            <img src="https://www.whoop.com/favicon.ico" alt="WHOOP Logo" class="company-logo">
-                        </div>
+            <div class="projects">
+                <article class="project project--featured glass glass--thick reveal" data-d="0" data-tilt data-tilt-max="5" data-hue="cyan" data-focus-group="proj">
+                    <div class="project-badge glass-well tz" data-tz="40">
+                        <span class="project-mark">Venmo</span>
                     </div>
-                    <div class="project-content">
-                        <h3>WHOOP</h3>
-                        <p>Developed iOS features for the premium fitness and health monitoring platform, helping athletes and health enthusiasts track their performance and recovery.</p>
+                    <div class="project-body tz" data-tz="8">
+                        <div class="project-tags">
+                            <span class="chip glass glass--thin">Swift</span>
+                            <span class="chip glass glass--thin">UIKit</span>
+                            <span class="chip glass glass--thin">MVVM</span>
+                        </div>
+                        <h3 class="project-title">Venmo</h3>
+                        <p>Contributed to one of the world's leading peer-to-peer payment platforms — helping millions send and receive money seamlessly.</p>
                         <div class="project-links">
-                            <a href="https://www.whoop.com" target="_blank" rel="noopener noreferrer" class="project-link"><i class="fas fa-external-link-alt"></i> Visit App</a>
-                            <a href="https://www.whoop.com" target="_blank" rel="noopener noreferrer" class="project-link"><i class="fas fa-globe"></i> Website</a>
+                            <a href="https://venmo.com" target="_blank" rel="noopener noreferrer" class="project-link" data-magnetic><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i> Visit app</a>
                         </div>
                     </div>
-                </div>
+                </article>
 
-                <div class="project-item">
-                    <div class="project-image">
-                        <div class="project-overlay">
-                            <div class="project-tech">
-                                <span class="tech-tag">Swift</span>
-                                <span class="tech-tag">Core Data</span>
-                                <span class="tech-tag">Clean Architecture</span>
-                            </div>
-                        </div>
-                        <div class="project-logo">
-                            <img src="https://klever.io/wp-content/uploads/2023/12/klever-logo-white.png" alt="Klever Logo" class="company-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                            <div class="klever-fallback" style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; font-size: 2rem; font-weight: bold; border-radius: 8px;">
-                                KLEVER
-                            </div>
-                        </div>
+                <article class="project glass glass--card reveal" data-d="1" data-tilt data-tilt-max="6" data-hue="violet" data-focus-group="proj">
+                    <div class="project-badge glass-well tz" data-tz="40">
+                        <span class="project-mark">WHOOP</span>
                     </div>
-                    <div class="project-content">
-                        <h3>Klever</h3>
-                        <p>Built iOS components for the cryptocurrency wallet platform, enabling users to securely manage, trade, and stake various digital assets with an intuitive interface.</p>
+                    <div class="project-body tz" data-tz="8">
+                        <div class="project-tags">
+                            <span class="chip glass glass--thin">SwiftUI</span>
+                            <span class="chip glass glass--thin">Combine</span>
+                            <span class="chip glass glass--thin">HealthKit</span>
+                        </div>
+                        <h3 class="project-title">WHOOP</h3>
+                        <p>Built iOS features for the premium fitness &amp; recovery platform athletes rely on to track performance.</p>
                         <div class="project-links">
-                            <a href="https://klever.io" target="_blank" rel="noopener noreferrer" class="project-link"><i class="fas fa-external-link-alt"></i> Visit App</a>
-                            <a href="https://klever.io" target="_blank" rel="noopener noreferrer" class="project-link"><i class="fas fa-globe"></i> Website</a>
+                            <a href="https://www.whoop.com" target="_blank" rel="noopener noreferrer" class="project-link" data-magnetic><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i> Visit app</a>
                         </div>
                     </div>
-                </div>
+                </article>
 
-                <div class="project-item">
-                    <div class="project-image">
-                        <div class="project-overlay">
-                            <div class="project-tech">
-                                <span class="tech-tag">SwiftUI</span>
-                                <span class="tech-tag">Combine</span>
-                                <span class="tech-tag">TCA</span>
-                            </div>
-                        </div>
-                        <div class="project-logo">
-                            <img src="https://www.glance.cx/favicon.ico" alt="Glance Logo" class="company-logo">
-                        </div>
+                <article class="project glass glass--card reveal" data-d="2" data-tilt data-tilt-max="6" data-hue="ember" data-focus-group="proj">
+                    <div class="project-badge glass-well tz" data-tz="40">
+                        <span class="project-mark">Klever</span>
                     </div>
-                    <div class="project-content">
-                        <h3>Glance</h3>
-                        <p>Developed iOS features for the customer experience platform, helping businesses understand and improve customer interactions through advanced analytics and insights.</p>
+                    <div class="project-body tz" data-tz="8">
+                        <div class="project-tags">
+                            <span class="chip glass glass--thin">Swift</span>
+                            <span class="chip glass glass--thin">Core Data</span>
+                            <span class="chip glass glass--thin">Clean Arch</span>
+                        </div>
+                        <h3 class="project-title">Klever</h3>
+                        <p>Built components for the crypto wallet platform — securely managing, trading and staking digital assets.</p>
                         <div class="project-links">
-                            <a href="https://www.glance.cx" target="_blank" rel="noopener noreferrer" class="project-link"><i class="fas fa-external-link-alt"></i> Visit App</a>
-                            <a href="https://www.glance.cx" target="_blank" rel="noopener noreferrer" class="project-link"><i class="fas fa-globe"></i> Website</a>
+                            <a href="https://klever.io" target="_blank" rel="noopener noreferrer" class="project-link" data-magnetic><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i> Visit app</a>
                         </div>
                     </div>
-                </div>
+                </article>
+
+                <article class="project glass glass--card reveal" data-d="3" data-tilt data-tilt-max="6" data-hue="ice" data-focus-group="proj">
+                    <div class="project-badge glass-well tz" data-tz="40">
+                        <span class="project-mark">Glance</span>
+                    </div>
+                    <div class="project-body tz" data-tz="8">
+                        <div class="project-tags">
+                            <span class="chip glass glass--thin">SwiftUI</span>
+                            <span class="chip glass glass--thin">Combine</span>
+                            <span class="chip glass glass--thin">TCA</span>
+                        </div>
+                        <h3 class="project-title">Glance</h3>
+                        <p>Developed features for the customer-experience platform, surfacing insights that improve every interaction.</p>
+                        <div class="project-links">
+                            <a href="https://www.glance.cx" target="_blank" rel="noopener noreferrer" class="project-link" data-magnetic><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i> Visit app</a>
+                        </div>
+                    </div>
+                </article>
             </div>
         </div>
     </section>
 
-    <!-- Education Section -->
+    <!-- ============ Education ============ -->
     <section class="section" id="education">
         <div class="container">
-            <div class="section-header reveal">
-                <h2 class="section-title">Education & Certifications</h2>
-                <p class="section-subtitle">Continuous learning and growth</p>
-            </div>
-            <div class="education-grid">
-                <div class="education-item">
-                    <div class="education-icon">
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
-                    <div class="education-content">
-                        <h3 class="education-title">Computer Science, Bachelor</h3>
-                        <p class="education-school">Centro Universitario FMU | FIAM-FAAM</p>
-                        <p class="education-date">2024 - Completed</p>
-                    </div>
+            <header class="section-head reveal">
+                <p class="eyebrow"><span class="eyebrow-dot"></span> 05 — Education</p>
+                <h2 class="section-title">Always calibrating</h2>
+            </header>
+
+            <div class="constellation">
+                <svg class="constellation-links" id="constellationLinks" aria-hidden="true" preserveAspectRatio="none"></svg>
+                <div class="edu glass glass--card reveal-scale" data-d="0" data-tilt data-tilt-max="6" data-node="0">
+                    <span class="edu-icon tz" data-tz="40"><i class="fas fa-graduation-cap" aria-hidden="true"></i></span>
+                    <h3 class="edu-title">Computer Science, Bachelor</h3>
+                    <p class="edu-school">Centro Universitário FMU · FIAM-FAAM</p>
+                    <p class="edu-date mono">2024 — Completed</p>
                 </div>
-                <div class="education-item">
-                    <div class="education-icon">
-                        <i class="fas fa-certificate"></i>
-                    </div>
-                    <div class="education-content">
-                        <h3 class="education-title">Java Development</h3>
-                        <p class="education-school">Caelum</p>
-                        <p class="education-date">2017</p>
-                    </div>
+                <div class="edu glass glass--card reveal-scale" data-d="1" data-tilt data-tilt-max="6" data-node="1">
+                    <span class="edu-icon tz" data-tz="40"><i class="fas fa-certificate" aria-hidden="true"></i></span>
+                    <h3 class="edu-title">Java Development</h3>
+                    <p class="edu-school">Caelum</p>
+                    <p class="edu-date mono">2017</p>
                 </div>
-                <div class="education-item">
-                    <div class="education-icon">
-                        <i class="fas fa-database"></i>
-                    </div>
-                    <div class="education-content">
-                        <h3 class="education-title">Oracle Database 12c</h3>
-                        <p class="education-school">Instituto Infnet</p>
-                        <p class="education-date">2017</p>
-                    </div>
+                <div class="edu glass glass--card reveal-scale" data-d="2" data-tilt data-tilt-max="6" data-node="2">
+                    <span class="edu-icon tz" data-tz="40"><i class="fas fa-database" aria-hidden="true"></i></span>
+                    <h3 class="edu-title">Oracle Database 12c</h3>
+                    <p class="edu-school">Instituto Infnet</p>
+                    <p class="edu-date mono">2017</p>
                 </div>
-                <div class="education-item">
-                    <div class="education-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div class="education-content">
-                        <h3 class="education-title">Scrum Master</h3>
-                        <p class="education-school">Scrum.org</p>
-                        <p class="education-date">2017</p>
-                    </div>
+                <div class="edu glass glass--card reveal-scale" data-d="3" data-tilt data-tilt-max="6" data-node="3">
+                    <span class="edu-icon tz" data-tz="40"><i class="fas fa-users" aria-hidden="true"></i></span>
+                    <h3 class="edu-title">Scrum Master</h3>
+                    <p class="edu-school">Scrum.org</p>
+                    <p class="edu-date mono">2017</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Location Section -->
-    <section class="section section-alt" id="location">
+    <!-- ============ Location ============ -->
+    <section class="section" id="location">
         <div class="container">
-            <div class="section-header reveal">
-                <h2 class="section-title">My Location</h2>
-                <p class="section-subtitle">Based in the vibrant city of Sao Paulo, Brazil</p>
-            </div>
-            <div class="location-content">
+            <header class="section-head reveal">
+                <p class="eyebrow"><span class="eyebrow-dot"></span> 06 — Based in</p>
+                <h2 class="section-title">São Paulo, Brazil</h2>
+            </header>
+
+            <div class="location-grid">
                 <div class="location-info reveal-left">
-                    <div class="location-details">
-                        <div class="location-icon">
-                            <i class="fas fa-map-marker-alt"></i>
-                        </div>
-                        <div class="location-text">
-                            <h3>Sao Paulo, Brazil</h3>
-                            <p>The largest city in Brazil and a major tech hub in Latin America. Home to countless startups, tech companies, and innovation centers.</p>
-                            <div class="location-features">
-                                <div class="location-feature">
-                                    <i class="fas fa-building"></i>
-                                    <span>Tech Hub</span>
-                                </div>
-                                <div class="location-feature">
-                                    <i class="fas fa-users"></i>
-                                    <span>Innovation</span>
-                                </div>
-                                <div class="location-feature">
-                                    <i class="fas fa-globe-americas"></i>
-                                    <span>Global City</span>
-                                </div>
-                            </div>
+                    <div class="location-lead">
+                        <span class="location-pin"><i class="fas fa-location-dot" aria-hidden="true"></i></span>
+                        <div>
+                            <h3 class="location-city">São Paulo</h3>
+                            <p>The largest city in Brazil and Latin America's leading tech hub — home to countless startups, scale-ups and innovation centers.</p>
                         </div>
                     </div>
+                    <div class="location-feats">
+                        <div class="feat glass glass--thin"><i class="fas fa-building" aria-hidden="true"></i> <span>Tech Hub</span></div>
+                        <div class="feat glass glass--thin"><i class="fas fa-lightbulb" aria-hidden="true"></i> <span>Innovation</span></div>
+                        <div class="feat glass glass--thin"><i class="fas fa-globe-americas" aria-hidden="true"></i> <span>Global City</span></div>
+                    </div>
                 </div>
+
                 <div class="location-map reveal-right">
-                    <div class="map-container">
-                        <div class="macos-window-frame">
-                            <div class="macos-controls">
-                                <div class="control-dot control-dot-close"></div>
-                                <div class="control-dot control-dot-minimize"></div>
-                                <div class="control-dot control-dot-maximize"></div>
-                            </div>
-                            <div class="macos-title-bar">
-                                <span class="macos-title">Maps</span>
-                                <span class="macos-subtitle">Sao Paulo, Brazil</span>
-                            </div>
+                    <div class="map-window glass glass--thick" data-tilt data-tilt-max="4">
+                        <div class="map-bar">
+                            <span class="map-controls">
+                                <span class="map-dot map-dot-close"></span>
+                                <span class="map-dot map-dot-min"></span>
+                                <span class="map-dot map-dot-max"></span>
+                            </span>
+                            <span class="map-title mono">Maps — São Paulo, BR</span>
                         </div>
-                        <div class="map-iframe-container">
+                        <div class="map-frame">
                             <iframe
+                                title="Map of São Paulo, Brazil"
                                 src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3654.5!2d-46.684521422706084!3d-23.615613456345166!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjPCsDM2JzU2LjIiUyA0NsKwNDEnMDQuMyJX!5e0!3m2!1sen!2sbr!4v1703123456789!5m2!1sen!2sbr"
-                                width="100%"
-                                height="400"
-                                style="border:0;"
-                                allowfullscreen=""
-                                loading="lazy"
-                                referrerpolicy="no-referrer-when-downgrade">
-                            </iframe>
+                                width="100%" height="420" style="border:0;" allowfullscreen=""
+                                loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                         </div>
                     </div>
                 </div>
@@ -725,75 +614,67 @@
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section class="section section-alt" id="contact">
+    <!-- ============ Contact ============ -->
+    <section class="section" id="contact">
         <div class="container">
-            <div class="section-header reveal">
-                <h2 class="section-title">Get In Touch</h2>
-                <p class="section-subtitle">Let's discuss your next project</p>
-            </div>
-            <div class="contact-content">
+            <header class="section-head reveal">
+                <p class="eyebrow"><span class="eyebrow-dot"></span> 07 — Contact</p>
+                <h2 class="section-title">Let's build something</h2>
+                <p class="section-sub">Have a project, a role, or a spatial idea? My inbox is open.</p>
+            </header>
+
+            <div class="contact-grid">
                 <div class="contact-info">
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <div class="contact-details">
-                            <h3>Email</h3>
-                            <a href="mailto:bruno.guitarpro@gmail.com">bruno.guitarpro@gmail.com</a>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="fab fa-linkedin"></i>
-                        </div>
-                        <div class="contact-details">
-                            <h3>LinkedIn</h3>
-                            <a href="https://www.linkedin.com/in/bruno-lopes-de-mello" target="_blank" rel="noopener">linkedin.com/in/bruno-lopes-de-mello</a>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="fab fa-github"></i>
-                        </div>
-                        <div class="contact-details">
-                            <h3>GitHub</h3>
-                            <a href="https://github.com/BrunoCerberus" target="_blank" rel="noopener">github.com/BrunoCerberus</a>
-                        </div>
-                    </div>
+                    <a href="mailto:bruno.guitarpro@gmail.com" class="contact-row glass glass--thin reveal-left" data-d="0">
+                        <span class="contact-icon glass-well"><i class="fas fa-envelope" aria-hidden="true"></i></span>
+                        <span class="contact-meta"><strong>Email</strong><span class="mono">bruno.guitarpro@gmail.com</span></span>
+                    </a>
+                    <a href="https://www.linkedin.com/in/bruno-lopes-de-mello" target="_blank" rel="noopener" class="contact-row glass glass--thin reveal-left" data-d="1">
+                        <span class="contact-icon glass-well"><i class="fab fa-linkedin-in" aria-hidden="true"></i></span>
+                        <span class="contact-meta"><strong>LinkedIn</strong><span class="mono">in/bruno-lopes-de-mello</span></span>
+                    </a>
+                    <a href="https://github.com/BrunoCerberus" target="_blank" rel="noopener" class="contact-row glass glass--thin reveal-left" data-d="2">
+                        <span class="contact-icon glass-well"><i class="fab fa-github" aria-hidden="true"></i></span>
+                        <span class="contact-meta"><strong>GitHub</strong><span class="mono">github.com/BrunoCerberus</span></span>
+                    </a>
                 </div>
-                <form class="contact-form" id="contactForm">
-                    <div class="form-group">
+
+                <form class="contact-form glass glass--thick reveal-right" id="contactForm" novalidate>
+                    <div class="field">
                         <label for="name">Name</label>
-                        <input type="text" id="name" name="name" required>
+                        <input class="glass-well" type="text" id="name" name="name" autocomplete="name" required>
                     </div>
-                    <div class="form-group">
+                    <div class="field">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required>
+                        <input class="glass-well" type="email" id="email" name="email" autocomplete="email" required>
                     </div>
-                    <div class="form-group">
+                    <div class="field">
                         <label for="subject">Subject</label>
-                        <input type="text" id="subject" name="subject" required>
+                        <input class="glass-well" type="text" id="subject" name="subject" required>
                     </div>
-                    <div class="form-group">
+                    <div class="field">
                         <label for="message">Message</label>
-                        <textarea id="message" name="message" rows="5" required></textarea>
+                        <textarea class="glass-well" id="message" name="message" rows="5" required></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary">Send Message</button>
+                    <button type="submit" class="btn btn-accent btn-block" data-magnetic>
+                        <span>Send message</span>
+                        <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                    </button>
                 </form>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
+    </main>
+
+    <!-- ============ Footer ============ -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <p>&copy; 2024 Bruno Mello. All rights reserved.</p>
-                <div class="footer-links">
-                    <a href="#hero">Back to Top</a>
-                </div>
-            </div>
+        <div class="footer-horizon" aria-hidden="true"></div>
+        <div class="container footer-inner">
+            <p class="footer-copy mono">© <span id="year">2026</span> Bruno Mello · Crafted in São Paulo</p>
+            <a href="#hero" class="footer-top" id="backToTop" data-magnetic>
+                <i class="fas fa-arrow-up" aria-hidden="true"></i> Back to top
+            </a>
         </div>
     </footer>
 
