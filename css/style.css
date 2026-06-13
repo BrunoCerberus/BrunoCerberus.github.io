@@ -475,7 +475,8 @@ img { display: block; max-width: 100%; }
 .bead:hover { box-shadow: inset 0 1px 0 0 var(--glass-border-lit), 0 0 22px -4px var(--glow-cyan); color: var(--accent); }
 .theme-toggle:hover { transform: rotate(40deg); }
 
-.menu-toggle { display: none; flex-direction: column; gap: 4px; }
+/* flex resets .bead's grid centering; restore both axes so the bars sit centered in the circle */
+.menu-toggle { display: none; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
 .menu-toggle span { width: 18px; height: 1.6px; background: var(--text-primary); border-radius: 2px; transition: transform var(--dur) var(--ease-glass), opacity var(--dur) ease; }
 .menu-toggle.active span:nth-child(1) { transform: translateY(5.6px) rotate(45deg); }
 .menu-toggle.active span:nth-child(2) { opacity: 0; }
@@ -553,6 +554,15 @@ img { display: block; max-width: 100%; }
 .js .reveal-right { transform: translateX(48px); filter: blur(6px); }
 .js .reveal-scale { transform: translateY(40px) scale(.985); filter: blur(6px); }
 .is-in { opacity: 1 !important; filter: none !important; transform: none; }
+/* The `.js .reveal*` hidden states (specificity 0,2,0) out-rank a bare `.is-in`
+   (0,1,0), so the transform never settled — reveal-left/right stayed frozen at
+   translateX(±48px) (off-screen + horizontal overflow) and every reveal sat 40px
+   low. Reset with matching specificity. No `!important`: the pointer-tilt engine
+   writes inline transforms on stat/skill/project/edu cards and must still win. */
+.js .reveal.is-in,
+.js .reveal-left.is-in,
+.js .reveal-right.is-in,
+.js .reveal-scale.is-in { transform: none; }
 
 /* ============================================================
    ABOUT + STATS
@@ -707,7 +717,9 @@ img { display: block; max-width: 100%; }
    CONTACT
    ============================================================ */
 .contact-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: var(--s7); align-items: start; }
-.contact-info { display: flex; flex-direction: column; gap: var(--s4); }
+/* min-width:0 lets this grid item shrink below the contact rows' min-content
+   (icon + email) — without it the 1fr track grows and overflows < ~334px wide. */
+.contact-info { display: flex; flex-direction: column; gap: var(--s4); min-width: 0; }
 .contact-row { display: flex; align-items: center; gap: var(--s4); padding: var(--s4) var(--s5); color: var(--text-primary); transition: transform var(--dur) var(--spring-soft), box-shadow var(--dur) var(--ease-glass); }
 .contact-row:hover { transform: translateX(8px); box-shadow: inset 0 1px 0 0 var(--glass-border-lit), 0 0 26px -8px var(--glow-cyan); color: var(--text-primary); }
 .contact-icon { width: 48px; height: 48px; flex: 0 0 auto; display: grid; place-items: center; font-size: 1.1rem; color: var(--accent); }
@@ -765,6 +777,12 @@ img { display: block; max-width: 100%; }
     .location-grid { grid-template-columns: 1fr; gap: var(--s7); }
     .contact-grid { grid-template-columns: 1fr; gap: var(--s6); }
     .section { padding-block: var(--s9); }
+
+    /* Once the location/contact grids stack, the horizontal slide-in has no room:
+       translateX(±48px) only has the container's padding to absorb it, so off-screen
+       (un-revealed) elements push the page wider than the viewport — and iOS Safari
+       lets you pan to it despite overflow-x:hidden. Reveal vertically instead. */
+    .js .reveal-left, .js .reveal-right { transform: translateY(40px); }
 }
 
 @media (max-width: 768px) {
