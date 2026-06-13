@@ -68,10 +68,13 @@ A graphite void lit by one slow "breathing" aurora, with content floating as she
 - WCAG-AA contrast, `:focus-visible` rings, a skip link, real `<nav>` with `aria-current="page"`, and labeled form fields with `aria-invalid` on error.
 
 ### Mobile Considerations
-- `overflow-x: hidden` on both `html` and `body` prevents horizontal scroll issues on iOS; safe-area insets respected on the fixed nav/footer.
+- `overflow-x: hidden` on both `html` and `body` is a backstop, not a fix — iOS Safari can still pan to off-viewport content. The real safeguard is to keep nothing wider than the viewport (see the reveal-transform gotchas). Safe-area insets respected on the fixed nav/footer.
 - Navigation collapses to a hamburger menu at 768px (frosted dropdown; Escape closes and restores focus to the toggle).
 - Backdrop-filter de-escalation on mobile: thick/card blur reduced, and small `.chip` surfaces drop `backdrop-filter` entirely to save GPU/battery.
 
 ## Gotchas
 - **Gradient-clipped text** (`background-clip: text`): override the gradient with `background-image:`, NOT the `background` shorthand — the shorthand silently resets `background-clip` to `border-box` and the text renders as a solid block.
 - **`[data-tilt]` cards must keep `overflow: visible`** — any non-visible overflow collapses `transform-style: preserve-3d` and kills the internal `translateZ` depth.
+- **Reveal `.is-in` must out-specify the hidden states.** The hidden states are `.js .reveal*` (specificity 0,2,0); a bare `.is-in` (0,1,0) loses, so the `transform` never resets and elements stay frozen at their initial offset. Reset with a matching-specificity selector (`.js .reveal*.is-in`), **not `!important`** — the pointer-tilt engine writes inline transforms on `[data-tilt]` reveal cards (stats/skills/projects/edu) and an `!important` rule would clobber them.
+- **`.reveal-left` / `.reveal-right` translate horizontally** (`translateX(±48px)`), which overflows the viewport once the container padding is smaller than the offset. They're verticalized to `translateY` at ≤1024px (where the location/contact grids stack). If you add a horizontal reveal to a near-full-width element, verticalize it on mobile too.
+- **Grid items need `min-width: 0` to shrink below content.** A `1fr` track is `minmax(auto, 1fr)`; its `auto` floor is the item's min-content, so an item with an unbreakable row (e.g. icon + email) forces the track wider than the viewport on narrow screens. Set `min-width: 0` on the grid item (see `.contact-info`).
