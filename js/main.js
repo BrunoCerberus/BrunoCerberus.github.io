@@ -449,7 +449,7 @@
         t.setAttribute('aria-live', type === 'error' ? 'assertive' : 'polite');
         t.innerHTML = '<span class="toast-ic">' + (type === 'success' ? '✓' : '!') + '</span><span>' + msg + '</span>';
         t.style.cssText = 'position:fixed;top:88px;right:20px;z-index:100001;display:flex;align-items:center;gap:.7rem;' +
-            'padding:.9rem 1.2rem;border-radius:16px;color:var(--text-primary);font-weight:500;max-width:360px;' +
+            'padding:.9rem 1.2rem;border-radius:16px;color:var(--text-primary);font-weight:500;max-width:min(360px,calc(100vw - 40px));' +
             'background:var(--glass-reg-bg);-webkit-backdrop-filter:blur(28px) saturate(185%);backdrop-filter:blur(28px) saturate(185%);' +
             'box-shadow:inset 0 1px 0 0 var(--glass-border-lit),var(--shadow-contact),var(--shadow-lift);' +
             'border:1px solid var(--glass-border);transform:translateX(130%);transition:transform .55s var(--spring-soft);';
