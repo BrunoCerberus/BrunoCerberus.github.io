@@ -671,7 +671,26 @@ img { display: block; max-width: 100%; }
 .project[data-hue="ice"]    { --hue-glow: rgba(168,216,255,.16); }
 
 /* ============================================================
-   EDUCATION — constellation
+    WRITING — article cards
+    ============================================================ */
+.articles { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--s5); perspective: 1300px; }
+.article { position: relative; transform-style: preserve-3d; display: flex; flex-direction: column; padding: var(--s6); }
+.article--featured { grid-column: 1 / -1; flex-direction: column; gap: var(--s4); }
+.article-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: var(--s3); }
+.article-platform { display: inline-flex; align-items: center; gap: .5rem; padding: .35rem .85rem; font-size: .78rem; }
+.article-platform i { color: var(--text-muted); font-size: .9em; }
+.article-date { font-size: .78rem; color: var(--text-muted); }
+.article-title { font-size: 1.4rem; margin-bottom: var(--s3); }
+.article--featured .article-title { font-size: 1.65rem; }
+.article p { color: var(--text-muted); margin: 0 0 var(--s3); }
+.article-tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: var(--s3); }
+.article-tags .chip { padding: .35rem .75rem; font-size: .78rem; }
+.article > .project-link { margin-top: auto; padding-top: var(--s3); display: inline-flex; align-items: center; gap: .5rem; font-weight: 600; color: var(--accent); padding: .5rem 0; }
+.article > .project-link i { font-size: .85em; transition: transform var(--dur) var(--ease-glass); }
+.article > .project-link:hover i { transform: translate(3px, -3px); }
+
+/* ============================================================
+    EDUCATION — constellation
    ============================================================ */
 .constellation { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s5); perspective: 1300px; }
 .constellation-links { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: visible; }
@@ -820,6 +839,8 @@ img { display: block; max-width: 100%; }
     .projects { grid-template-columns: 1fr; }
     .project--featured { flex-direction: column; }
     .project--featured .project-badge { min-height: 200px; }
+    .articles { grid-template-columns: 1fr; }
+    .article--featured { flex-direction: column; }
     .constellation { grid-template-columns: repeat(2, 1fr); }
     .constellation-links { display: none; }
     .edu:nth-child(n) { transform: none; }
