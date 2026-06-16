@@ -38,7 +38,7 @@
             setupRackFocus();
             setupGlassSpecular();
         }
-        if (!reduce) setupTypewriter(); else $('#roleText').textContent = 'Senior iOS Engineer';
+        if (!reduce) setupTypewriter(); else $('#roleText').textContent = 'Senior iOS Engineer & AI';
         startRAF();
         on(window, 'scroll', kick, { passive: true });
         on(window, 'resize', function () { dirty = true; kick(); }, { passive: true });
@@ -251,22 +251,23 @@
         window.addEventListener('resize', debounce(drawConstellation, 150));
     }
     function drawConstellation() {
-        var svg = $('#constellationLinks');
-        var box = $('.constellation');
-        if (!svg || !box) return;
-        var nodes = $$('.edu', box);
-        if (window.innerWidth <= 768 || nodes.length < 2) { svg.innerHTML = ''; return; }
-        var br = box.getBoundingClientRect();
-        svg.setAttribute('viewBox', '0 0 ' + br.width + ' ' + br.height);
-        var pts = nodes.map(function (n) {
-            var r = n.getBoundingClientRect();
-            return { x: r.left - br.left + r.width / 2, y: r.top - br.top + r.height / 2 };
+        $$('.constellation').forEach(function(box) {
+            var svg = $('svg', box);
+            if (!svg || !box) return;
+            var nodes = $$('.edu', box);
+            if (window.innerWidth <= 768 || nodes.length < 2) { svg.innerHTML = ''; return; }
+            var br = box.getBoundingClientRect();
+            svg.setAttribute('viewBox', '0 0 ' + br.width + ' ' + br.height);
+            var pts = nodes.map(function (n) {
+                var r = n.getBoundingClientRect();
+                return { x: r.left - br.left + r.width / 2, y: r.top - br.top + r.height / 2 };
+            });
+            var lines = '';
+            for (var i = 0; i < pts.length - 1; i++) {
+                lines += '<line x1="' + pts[i].x + '" y1="' + pts[i].y + '" x2="' + pts[i + 1].x + '" y2="' + pts[i + 1].y + '"/>';
+            }
+            svg.innerHTML = lines;
         });
-        var lines = '';
-        for (var i = 0; i < pts.length - 1; i++) {
-            lines += '<line x1="' + pts[i].x + '" y1="' + pts[i].y + '" x2="' + pts[i + 1].x + '" y2="' + pts[i + 1].y + '"/>';
-        }
-        svg.innerHTML = lines;
     }
 
     /* ---------- translateZ from data-tz ---------- */
@@ -390,7 +391,7 @@
     function setupTypewriter() {
         var el = $('#roleText');
         if (!el) return;
-        var roles = ['Senior iOS Engineer', 'Swift & SwiftUI craftsman', 'Spatial computing explorer', 'Clean Architecture advocate'];
+        var roles = ['Senior iOS Engineer & AI', 'Swift, SwiftUI & Vision Pro developer', 'Spatial computing explorer', 'AI + Machine Learning practitioner', 'Clean Architecture advocate'];
         var ri = 0, ci = 0, deleting = false;
         function tick() {
             var word = roles[ri];
