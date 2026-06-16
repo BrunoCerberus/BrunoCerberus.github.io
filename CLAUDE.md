@@ -58,7 +58,22 @@ A graphite void lit by one slow "breathing" aurora, with content floating as she
 - **Magnetic CTAs** (`[data-magnetic]`), **rack-focus** (`data-focus-group` → hovered sharpens, siblings get `.is-dimmed`).
 - **Scroll-linked timeline pour:** `#timelineFill` height + `.tl-item.lit`; current role is `.is-now` (ember beacon).
 - **Reveal on scroll:** `.reveal` / `.reveal-left` / `.reveal-right` / `.reveal-scale` → `.is-in` via `IntersectionObserver` (staggered by `data-d`).
-- Stats counter, FLIP nav pill, role typewriter, "Lens Calibration" loader, contact-form validation.
+- **Constellation links** — `drawConstellation()` loops over all `.constellation` containers (Education, Certifications), not a single hardcoded ID.
+- **Role typewriter** — cycles through roles in `#roleText`, updated to include "AI Engineer" and related titles.
+- Stats counter, FLIP nav pill, "Lens Calibration" loader, contact-form validation.
+
+### Page Sections (01–09)
+Order in HTML: Hero → About → Experience → Skills → Selected Work → Education → Certifications → Writing → Location → Contact.
+- **Hero** — eyebrow, animated name, role typewriter, description, CTAs, code panel.
+- **About** — bio copy + 3 stat cards with animated counters.
+- **Experience** — vertical timeline (`#timeline` + `#timelineFill`), 10 roles, ember beacon on current role. Bullets are enriched (~7-11 per role).
+- **Skills** — 9 categories of chips (Languages, iOS Frameworks, Architecture, Data & Backend, Tooling & DevOps, Testing & Analytics, AI & ML, Services & APIs, Design & Patterns).
+- **Selected Work** — 4 project cards (1 featured + 3 standard), glass-morphism, tilt.
+- **Education** — 5 items in constellation grid (SVG dashed lines connect nodes).
+- **Certifications** — 2 cards, reuse of `.constellation` / `.edu` classes.
+- **Writing** — 3 article cards (1 featured spans full width), `.articles` grid matching project card pattern, links to dev.to.
+- **Location** — city info + interactive map window with iframe glass clip trick (see Gotchas).
+- **Contact** — info rows + validated form.
 
 ### Accessibility & graceful degradation
 - A pre-paint **`js` class** on `<html>` gates hidden-by-default states (reveal/loader/hero lines) so the page is fully readable with JS disabled.
@@ -75,7 +90,7 @@ A graphite void lit by one slow "breathing" aurora, with content floating as she
 ## Gotchas
 - **Gradient-clipped text** (`background-clip: text`): override the gradient with `background-image:`, NOT the `background` shorthand — the shorthand silently resets `background-clip` to `border-box` and the text renders as a solid block.
 - **`[data-tilt]` cards must keep `overflow: visible`** — any non-visible overflow collapses `transform-style: preserve-3d` and kills the internal `translateZ` depth.
-- **Reveal `.is-in` must out-specify the hidden states.** The hidden states are `.js .reveal*` (specificity 0,2,0); a bare `.is-in` (0,1,0) loses, so the `transform` never resets and elements stay frozen at their initial offset. Reset with a matching-specificity selector (`.js .reveal*.is-in`), **not `!important`** — the pointer-tilt engine writes inline transforms on `[data-tilt]` reveal cards (stats/skills/projects/edu) and an `!important` rule would clobber them.
+- **Reveal `.is-in` must out-specify the hidden states.** The hidden states are `.js .reveal*` (specificity 0,2,0); a bare `.is-in` (0,1,0) loses, so the `transform` never resets and elements stay frozen at their initial offset. Reset with a matching-specificity selector (`.js .reveal*.is-in`), **not `!important`** — the pointer-tilt engine writes inline transforms on `[data-tilt]` reveal cards (stats/skills/projects/edu/certs) and an `!important` rule would clobber them.
 - **`.reveal-left` / `.reveal-right` translate horizontally** (`translateX(±48px)`), which overflows the viewport once the container padding is smaller than the offset. They're verticalized to `translateY` at ≤1024px (where the location/contact grids stack). If you add a horizontal reveal to a near-full-width element, verticalize it on mobile too.
 - **Grid items need `min-width: 0` to shrink below content.** A `1fr` track is `minmax(auto, 1fr)`; its `auto` floor is the item's min-content, so an item with an unbreakable row (e.g. icon + email) forces the track wider than the viewport on narrow screens. Set `min-width: 0` on the grid item (see `.contact-info`).
 - **A filtered iframe ignores an ancestor's rounded clip.** The map iframe paints on its own compositing layer (its `filter` forces this), so `overflow: hidden` plus `border-radius` on `.map-window` never clips its corners and the bottom two render square. Round and clip the iframe's direct wrapper (`.map-frame`) instead, with the radius set to the panel radius minus the 1px window border so it nests inside the frame.
